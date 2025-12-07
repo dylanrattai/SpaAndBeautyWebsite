@@ -12,8 +12,8 @@ using SpaAndBeautyWebsite.Data;
 namespace SpaAndBeautyWebsite.Migrations
 {
     [DbContext(typeof(SpaAndBeautyWebsiteContext))]
-    [Migration("20251206211528_UpdateSeedData")]
-    partial class UpdateSeedData
+    [Migration("20251207204040_AddEmployeeUsername")]
+    partial class AddEmployeeUsername
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -134,6 +134,11 @@ namespace SpaAndBeautyWebsite.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
                     b.Property<string>("Permission")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -153,6 +158,11 @@ namespace SpaAndBeautyWebsite.Migrations
                         .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("Street")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");

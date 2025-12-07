@@ -59,11 +59,16 @@ builder.Services.AddRazorComponents()
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+try
 {
-    var services = scope.ServiceProvider;
-
     SeedData.Initialize(services);
+}
+catch (Exception ex)
+{
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occurred while seeding the database.");
 }
 
 // Add a minimal endpoint to perform the cookie sign-in on a normal HTTP request.
@@ -74,6 +79,7 @@ app.MapGet("/signin-local", async (HttpContext httpContext) =>
     var q = httpContext.Request.Query;
     var username = q["username"].FirstOrDefault();
     var id = q["id"].FirstOrDefault();
+    var role = q["role"].FirstOrDefault() ?? "Customer";
     var returnUrl = q["returnUrl"].FirstOrDefault() ?? "/";
 
     if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(id))
@@ -81,11 +87,17 @@ app.MapGet("/signin-local", async (HttpContext httpContext) =>
         return Results.BadRequest("username and id required");
     }
 
+    var allowedRoles = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "Customer", "Staff", "Manager", "Admin" };
+    if (!allowedRoles.Contains(role))
+    {
+        return Results.BadRequest("invalid role");
+    }
+
     var claims = new List<Claim>
     {
         new Claim(ClaimTypes.Name, username),
         new Claim(ClaimTypes.NameIdentifier, id),
-        new Claim(ClaimTypes.Role, "Customer")
+        new Claim(ClaimTypes.Role, role)
     };
 
     var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

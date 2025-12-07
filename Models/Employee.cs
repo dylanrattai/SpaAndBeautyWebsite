@@ -18,6 +18,15 @@ namespace SpaAndBeautyWebsite.Models
         [StringLength(30)]
         public required string LastName { get; set; }
 
+        [Required]
+        [StringLength(30)]
+        public required string Username { get; set; }
+
+        [Required]
+        [StringLength(30)]
+        [DataType(DataType.Password)]
+        public required string Password { get; set; }
+
         // Format: +1-123-456-7890
         [Required]
         [StringLength(15)]
@@ -29,11 +38,6 @@ namespace SpaAndBeautyWebsite.Models
         [StringLength(50)]
         [EmailAddress]
         public required string Email { get; set; }
-
-        [Required] 
-        [StringLength(20)]
-        [PasswordPropertyText]
-        public required string Password { get; set; }
 
         [Required]
         [StringLength(30)]

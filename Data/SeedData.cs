@@ -27,9 +27,10 @@ public class SeedData
                 {
                     FirstName = "Sofia",
                     LastName = "Andersson",
+                    Username = "sofia.andersson",
+                    Password = "sand123", // Keep only one Password assignment
                     PhoneNumber = "+1-111-222-3333",
                     Email = "sofia.andersson@example.com",
-                    Password = "sand123",
                     Street = "123 Main St",
                     City = "Springfield",
                     State = "IL",
@@ -42,31 +43,33 @@ public class SeedData
                 {
                     FirstName = "Lucas",
                     LastName = "Martinez",
+                    Username = "lucas.martinez",
+                    Password = "lmartinez!", // Keep only one Password assignment
                     PhoneNumber = "+1-222-333-4444",
                     Email = "lucas.martinez@example.com",
-                    Password = "lmartinez!",
                     Street = "456 Oak Ave",
                     City = "Springfield",
                     State = "IL",
                     ZipCode = "627-111-2222",
                     JobTitle = "Esthetician",
                     Salary = 50000m,
-                    Permission = "Staff"
+                    Permission = "Manager"
                 },
                 new Employee
                 {
                     FirstName = "Emma",
                     LastName = "Nguyen",
+                    Username = "emma.nguyen",
+                    Password = "emmanailtech", // Keep only one Password assignment
                     PhoneNumber = "+1-333-444-5555",
                     Email = "emma.nguyen@example.com",
-                    Password = "emmanailtech",
                     Street = "789 Pine Rd",
                     City = "Springfield",
                     State = "IL",
                     ZipCode = "627-222-3333",
                     JobTitle = "Nail Technician",
                     Salary = 48000m,
-                    Permission = "Staff"
+                    Permission = "Admin"
                 }
             );
 
