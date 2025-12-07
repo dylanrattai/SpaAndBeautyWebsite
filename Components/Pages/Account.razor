@@ -1,0 +1,153 @@
+﻿@page "/account"
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@using SpaAndBeautyWebsite.Interfaces
+@using SpaAndBeautyWebsite.Models
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavManager
+@inject IUserService UserService
+
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm text-center p-4 border-0 profile-card">
+                <div class="profile-img-wrapper mx-auto">
+                    <div class="profile-placeholder rounded-circle d-flex align-items-center justify-content-center bg-primary text-white fs-1 mx-auto mb-3" style="width:150px; height:150px;">
+                        @(string.IsNullOrEmpty(userProfile.FirstName) ? "?" : userProfile.FirstName.Substring(0, 1))
+                    </div>
+                </div>
+                <h4 class="mb-0">@userProfile.FirstName @userProfile.LastName</h4>
+                <p class="text-muted">@userProfile.JobTitle</p>
+
+                <div class="d-grid gap-2 mt-3">
+                    <button class="btn btn-outline-danger" @onclick="Logout">Sign Out</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                    <h3 class="text-primary">Account Settings</h3>
+                </div>
+                <div class="card-body p-4">
+                    @if (isLoading)
+                    {
+                        <div class="text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <form @onsubmit="SaveChanges">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small text-uppercase">First Name</label>
+                                    <input type="text" class="form-control" @bind="userProfile.FirstName" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small text-uppercase">Last Name</label>
+                                    <input type="text" class="form-control" @bind="userProfile.LastName" />
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label text-muted small text-uppercase">Email Address</label>
+                                <input type="email" class="form-control" @bind="userProfile.Email" disabled />
+                                <div class="form-text">Email cannot be changed.</div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small text-uppercase">Phone Number</label>
+                                    <input type="tel" class="form-control" @bind="userProfile.Phone" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small text-uppercase">Location</label>
+                                    <input type="text" class="form-control" @bind="userProfile.Location" />
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end gap-2 mt-4">
+                                <button type="button" class="btn btn-light" @onclick="ResetForm">Cancel</button>
+                                <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-card {
+        background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+    }
+
+    .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+    }
+</style>
+
+@code {
+    // This now refers strictly to SpaAndBeautyWebsite.Models.UserProfile
+    private User userProfile = new User();
+    private User originalUserProfile = new User();
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            var userEmail = user.FindFirst(ClaimTypes.Email)?.Value
+                         ?? user.FindFirst(ClaimTypes.Name)?.Value;
+
+            if (userEmail != null)
+            {
+                var result = await UserService.GetProfileAsync(userEmail);
+                if (result != null)
+                {
+                    userProfile = result;
+                    CloneProfile(userProfile, originalUserProfile);
+                }
+            }
+        }
+        isLoading = false;
+    }
+
+    private void ResetForm()
+    {
+        CloneProfile(originalUserProfile, userProfile);
+        StateHasChanged();
+    }
+
+    private void Logout()
+    {
+        NavManager.NavigateTo("/logout", forceLoad: true);
+    }
+
+    private async Task SaveChanges()
+    {
+        await UserService.UpdateProfileAsync(userProfile);
+        CloneProfile(userProfile, originalUserProfile);
+    }
+
+    private void CloneProfile(User source, User destination)
+    {
+        destination.Id = source.Id;
+        destination.FirstName = source.FirstName;
+        destination.LastName = source.LastName;
+        destination.Email = source.Email;
+        destination.JobTitle = source.JobTitle;
+        destination.Phone = source.Phone;
+        destination.Location = source.Location;
+        destination.UserType = source.UserType;
+    }
+}
