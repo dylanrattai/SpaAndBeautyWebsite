@@ -34,9 +34,6 @@
             case "No Show":
                 <span class="badge bg-danger">No Show</span>
                 break;
-            case "Cancelled":
-                <span class="badge bg-secondary">Cancelled</span>
-                break;
             case "Checked In":
                 <span class="badge bg-info text-dark">Checked In</span>
                 break;
@@ -93,23 +90,34 @@
     {
         context = DbFactory.CreateDbContext();
 
-        items = from a in context.Appointment
-                join e in context.Employee on a.EmployeeId equals e.EmployeeId into eGroup
-                from e in eGroup.DefaultIfEmpty()
-                join c in context.Customer on a.CustomerId equals c.CustomerId into cGroup
-                from c in cGroup.DefaultIfEmpty()
-                join s in context.Service on a.ServiceId equals s.ServiceId into sGroup
-                from s in sGroup.DefaultIfEmpty()
-                select new AppointmentViewModel
-                {
-                    AppointmentId = a.AppointmentId,
-                    EmployeeName = e != null ? e.FirstName + " " + e.LastName : "Unknown Employee",
-                    CustomerName = c != null ? c.FirstName + " " + c.LastName : "Unknown Customer",
-                    ServiceName = s != null ? s.Name : "Unknown Service",
-                    ScheduledDateTime = a.ScheduledDateTime,
-                    DurationMinutes = a.DurationMinutes,
-                    Status = a.Status
-                };
+        var query = from a in context.Appointment
+            join e in context.Employee on a.EmployeeId equals e.EmployeeId into eGroup
+            from e in eGroup.DefaultIfEmpty()
+            join c in context.Customer on a.CustomerId equals c.CustomerId into cGroup
+            from c in cGroup.DefaultIfEmpty()
+            join s in context.Service on a.ServiceId equals s.ServiceId into sGroup
+            from s in sGroup.DefaultIfEmpty()
+            select new AppointmentViewModel
+            {
+                AppointmentId = a.AppointmentId,
+                EmployeeName = e != null ? e.FirstName + " " + e.LastName : "Unknown Employee",
+                CustomerName = c != null ? c.FirstName + " " + c.LastName : "Unknown Customer",
+                ServiceName = s != null ? s.Name : "Unknown Service",
+                ScheduledDateTime = a.ScheduledDateTime,
+                DurationMinutes = a.DurationMinutes,
+                Status = a.Status
+            };
+
+        // Apply the Custom Sort:
+        // 1. Sort by Status using your specific weighting
+        // 2. Then sort by Date & Time for items within the same status
+        items = query
+            .OrderBy(x => x.Status == "Scheduled" ? 1 :
+                x.Status == "Checked In" ? 2 :
+                x.Status == "In Progress" ? 3 :
+                x.Status == "Completed" ? 4 :
+                5) // Rank 5 covers "No Show", "Cancelled", etc.
+            .ThenBy(x => x.ScheduledDateTime);
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
