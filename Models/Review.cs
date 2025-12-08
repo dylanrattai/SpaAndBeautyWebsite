@@ -6,28 +6,28 @@ namespace SpaAndBeautyWebsite.Models
     public class Review
     {
         [Key]
-        [Required]
         public int ReviewId { get; set; }
 
-        [Required]
-        [ForeignKey(nameof(EmployeeId))]
-        public int EmployeeId { get; set; }
+        // --- Foreign Keys (The Numbers) ---
+        public int? EmployeeId { get; set; }
+        public int? CustomerId { get; set; }
+        public int? ServiceId { get; set; }
 
         [Required]
-        [ForeignKey(nameof(CustomerId))]
-        public int CustomerId { get; set; }
+        public string Description { get; set; } = string.Empty;
 
-        [Required]
-        [ForeignKey(nameof(ServiceId))]
-        public int ServiceId { get; set; }
-
-        [Required]
-        [StringLength(100)]
-        public required string Description { get; set; }
-
-        [Required]
-        [Column(TypeName = "int")]
-        [Range(1, 10, ErrorMessage = "Rating must be between 1 and 10.")]
+        [Range(1, 10)]
         public int Rating { get; set; }
+
+        // --- NAVIGATION PROPERTIES (THE FIX) ---
+        // These allow you to type "review.Customer.FirstName"
+        [ForeignKey("CustomerId")]
+        public virtual Customer? Customer { get; set; }
+
+        [ForeignKey("EmployeeId")]
+        public virtual Employee? Employee { get; set; }
+
+        [ForeignKey("ServiceId")]
+        public virtual Service? Service { get; set; }
     }
 }

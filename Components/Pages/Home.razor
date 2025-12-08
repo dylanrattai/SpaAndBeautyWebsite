@@ -5,6 +5,37 @@
 @using SpaAndBeautyWebsite.Data
 @inject IDbContextFactory<SpaAndBeautyWebsite.Data.SpaAndBeautyWebsiteContext> DbFactory
 
+<div class="hero-wrapper">
+    <div class="hero-image"></div>
+
+    <div class="hero-content text-center">
+        <h6 class="hero-subtitle">PLEASANT PARK SPA & WELLNESS</h6>
+        <h1 class="hero-title">WELCOME</h1>
+
+        <div class="hero-text-body">
+            <p>
+                Pleasant Park is the quintessential destination known for its luxury treatments,
+                calming atmosphere, and breathtaking scenery. Whether you are planning a solo retreat,
+                a couple's getaway, or a group event, our spa offers exciting specials and
+                getaway deals for easy escapes to relaxation.
+            </p>
+            <p>
+                Our AAA four-diamond facility puts you near the city's top attractions.
+                We are just minutes from the best events, golf tournaments, and wine festivals.
+                A favorite among locals and travelers alike, it's all right here at Pleasant Park!
+            </p>
+        </div>
+
+        <div class="hero-nav-strip">
+            <a href="create-account">SIGN UP</a>
+            <a href="#">REVIEWS</a>
+            <a href="#">BATTLEPASS</a>
+            <a href="services">SERVICES</a>
+            <a href="appointments">APPOINTMENTS</a>
+        </div>
+    </div>
+</div>
+
 <section class="offers-section py-5">
     <div class="container">
         <div class="row mb-5">
@@ -105,7 +136,6 @@
                 {
                     <button class="btn btn-outline-dark me-2" @onclick="ShowLess">Show Less</button>
                 }
-
                 <a href="reviews/create" class="btn btn-primary">Write a Review</a>
             </div>
         </div>
@@ -113,8 +143,83 @@
 </section>
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
-    /* ... (Your existing styles here) ... */
+    /* --- NEW HERO STYLES --- */
+    .hero-wrapper {
+        width: 100%;
+        background: linear-gradient(to bottom, #dbeff2 0%, #ffffff 100%); /* Light blue fade like your image */
+        padding-bottom: 50px;
+    }
+
+    .hero-image {
+        width: 100%;
+        height: 520px; /* Adjust height as needed */
+        /* Placeholder Image - Replace with your own image */
+        background-image: url('https://wallpaperaccess.com/full/2551173.jpg');
+        background-size: cover;
+        background-position: center;
+    }
+
+    .hero-content {
+        padding: 60px 20px 20px 20px;
+        max-width: 900px;
+        margin: 0 auto; /* Centers the text block */
+    }
+
+    .hero-subtitle {
+        font-family: 'Lato', sans-serif;
+        font-size: 0.85rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #555;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .hero-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 3.5rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #2C4F58; /* Your Spa Teal */
+        margin-bottom: 30px;
+        font-weight: 400;
+    }
+
+    .hero-text-body {
+        font-family: 'Lato', sans-serif;
+        font-size: 1rem;
+        line-height: 1.8;
+        color: #4a4a4a;
+        margin-bottom: 40px;
+    }
+
+    .hero-nav-strip {
+        border-top: 1px solid #ccc; /* The line above the links */
+        border-bottom: 1px solid #ccc; /* The line below the links (optional) */
+        padding: 15px 0;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+
+        .hero-nav-strip a {
+            font-family: 'Playfair Display', serif;
+            color: #777;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+            .hero-nav-strip a:hover {
+                color: #C5A059; /* Your Spa Gold */
+            }
+
+    /* --- EXISTING STYLES (Unchanged) --- */
     .promo-section {
         display: flex;
         flex-wrap: wrap;
@@ -197,6 +302,10 @@
         .promo-text {
             margin: 0 auto 30px auto;
         }
+
+        .hero-title {
+            font-size: 2.5rem;
+        }
     }
 </style>
 
@@ -208,7 +317,7 @@
         <h3 class="promo-subtitle">Best Rate</h3>
         <h1 class="promo-title">Guarantee</h1>
         <p class="promo-text">
-            Sign up now to book your first appointment at an unbeatable price! Experience luxury spa treatments without breaking the bank. Our best rate guarantee ensures you get the finest services at the most affordable rates. Don't miss out on this exclusive offer to pamper yourself while saving money.
+            Sign up now to book your first appointment at an unbeatable price! Experience luxury spa treatments without breaking the bank.
         </p>
         <a href="create-account" class="btn btn-primary text-uppercase">Sign Up</a>
     </div>
@@ -217,7 +326,6 @@
 @code {
     private int visibleReviews = 6;
 
-    // This is your View Model (Used for display)
     public class ReviewModel
     {
         public string Name { get; set; }
@@ -225,64 +333,28 @@
         public int Rating { get; set; }
     }
 
-    // Initialize with your Mock Data
-    private List<ReviewModel> Reviews = new List<ReviewModel>
-    {
-        new ReviewModel { Name = "Sarah Jenkins", Comment = "The facial was absolutely divine. My skin has never felt this hydrated!", Rating = 10 },
-        new ReviewModel { Name = "Mike Ross", Comment = "Great prices for the deep tissue massage. Really worked out my back knots.", Rating = 9 },
-        new ReviewModel { Name = "Jessica Pearson", Comment = "Luxury atmosphere without the insane price tag. The 'Homeless Package' is actually a steal.", Rating = 10 },
-        new ReviewModel { Name = "Louis Litt", Comment = "Mud bath was exceptional. The staff treated me like royalty.", Rating = 10 },
-        new ReviewModel { Name = "Donna Paulsen", Comment = "I knew everything about this place before I walked in, but I was still impressed.", Rating = 10 },
-        new ReviewModel { Name = "Harvey Specter", Comment = "Efficient service. I was in and out, feeling recharged. 10/10.", Rating = 10 },
-        new ReviewModel { Name = "Rachel Zane", Comment = "Loved the manicure! The polish lasted for weeks.", Rating = 9 },
-        new ReviewModel { Name = "John Doe", Comment = "Good experience, but the waiting room was a bit cold.", Rating = 7 },
-        new ReviewModel { Name = "Emily Blunt", Comment = "The Swedish massage put me right to sleep. So relaxing.", Rating = 10 },
-        new ReviewModel { Name = "Chris Evans", Comment = "Took my mom here for her birthday. She loved the pedicure service.", Rating = 10 },
-        new ReviewModel { Name = "Jordan Lee", Comment = "I have to say, the website design is excellent. It was incredibly easy to navigate and booking my appointment was seamless. Great user experience!", Rating = 10}
-    };
+    private List<ReviewModel> Reviews = new List<ReviewModel>();
 
-    // THIS IS THE NEW PART: Loading Real Data
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-
-        // 1. Fetch real reviews from DB, including the Customer info
         var realReviews = await context.Review
-            //.Include(r => r.Customer) // <-- Remove or comment out this line
-            .OrderByDescending(r => r.ReviewId) // Get newest first
+            .Include(r => r.Customer)
+            .OrderByDescending(r => r.ReviewId)
             .ToListAsync();
 
-        // 2. Loop through real reviews and add them to the top of the list
-        // Note: We iterate backwards so when we Insert(0), the newest stays at top
         foreach (var r in ((IEnumerable<Review>)realReviews).Reverse())
         {
             var displayModel = new ReviewModel
             {
-                // Logic: If FirstName/LastName properties exist on Review, use them; otherwise, use "Guest"
-                Name = !string.IsNullOrEmpty(r.GetType().GetProperty("FirstName")?.GetValue(r)?.ToString()) && 
-                       !string.IsNullOrEmpty(r.GetType().GetProperty("LastName")?.GetValue(r)?.ToString())
-                    ? $"{r.GetType().GetProperty("FirstName")?.GetValue(r)} {r.GetType().GetProperty("LastName")?.GetValue(r)}"
-                    : "Guest",
-
-                // Logic: Map DB 'Description' to UI 'Comment'
+                Name = r.Customer != null ? $"{r.Customer.FirstName} {r.Customer.LastName}" : "Guest",
                 Comment = r.Description,
-
-                // Logic: Pass the rating
                 Rating = r.Rating
             };
-
-            // Add to the VERY TOP of the list so you see them immediately
             Reviews.Insert(0, displayModel);
         }
     }
 
-    private void ShowMore()
-    {
-        visibleReviews = Reviews.Count;
-    }
-
-    private void ShowLess()
-    {
-        visibleReviews = 6;
-    }
+    private void ShowMore() { visibleReviews = Reviews.Count; }
+    private void ShowLess() { visibleReviews = 6; }
 }
