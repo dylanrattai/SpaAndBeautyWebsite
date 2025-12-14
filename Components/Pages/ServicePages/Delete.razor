@@ -1,8 +1,14 @@
 ﻿@page "/services/delete"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.EntityFrameworkCore
+@using SpaAndBeautyWebsite.Data
 @using SpaAndBeautyWebsite.Models
-@inject IDbContextFactory<SpaAndBeautyWebsite.Data.SpaAndBeautyWebsiteContext> DbFactory
+@rendermode InteractiveServer
+@inject IDbContextFactory<SpaAndBeautyWebsiteContext> DbFactory
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize(Policy = "RequireAdmin")]
 
 <PageTitle>Delete</PageTitle>
 

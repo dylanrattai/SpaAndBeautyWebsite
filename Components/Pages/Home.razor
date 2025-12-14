@@ -1,10 +1,10 @@
 @page "/"
-@rendermode InteractiveServer
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.EntityFrameworkCore
-@using SpaAndBeautyWebsite.Models
 @using SpaAndBeautyWebsite.Data
-@inject IDbContextFactory<SpaAndBeautyWebsite.Data.SpaAndBeautyWebsiteContext> DbFactory
+@using SpaAndBeautyWebsite.Models
+@rendermode InteractiveServer
+@inject IDbContextFactory<SpaAndBeautyWebsiteContext> DbFactory
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <div class="hero-wrapper">
@@ -55,54 +55,25 @@
         </div>
 
         <div class="row g-4">
-            <div class="col-md-6">
-                <div class="card h-100 border-opacity-25 shadow-sm offer-card">
-                    <div class="card-body text-center d-flex flex-column">
-                        <h5 class="card-title">Manicure & Pedicure</h5>
-                        <p class="card-text text-muted flex-grow-1">Complete hand and foot care with polish and massage.</p>
-                        <div class="mt-3">
-                            <a href="services" class="btn btn-outline-primary text-uppercase me-2">View Services</a>
-                            <a href="appointments/create" class="btn btn-primary text-uppercase">Book Now</a>
+            @foreach (var service in services)
+            {
+                <div class="col-md-6">
+                    <div class="card h-100 border-opacity-25 shadow-sm offer-card">
+                        <div class="card-body text-center d-flex flex-column">
+                            <h5>@service.Name</h5>
+                            <p class="card-text text-muted flex-grow-1">@service.Description</p>
+
+                            <small class="d-block text-secondary fw-bold mb-2">
+                                Duration: @service.Duration minutes | Price: $@service.Price
+                            </small>
+
+                            <div class="mt-3">
+                                <a href="appointments/create" class="btn btn-primary text-uppercase">Book Now</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card h-100 border-opacity-25 shadow-sm offer-card">
-                    <div class="card-body text-center d-flex flex-column">
-                        <h5 class="card-title">Signature Facial</h5>
-                        <p class="card-text text-muted flex-grow-1">Custom facial treatment to cleanse, exfoliate and hydrate skin.</p>
-                        <div class="mt-3">
-                            <a href="services" class="btn btn-outline-primary text-uppercase me-2">View Services</a>
-                            <a href="appointments/create" class="btn btn-primary text-uppercase">Book Now</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card h-100 border-opacity-25 shadow-sm offer-card">
-                    <div class="card-body text-center d-flex flex-column">
-                        <h5 class="card-title">Deep Tissue Massage</h5>
-                        <p class="card-text text-muted flex-grow-1">Focused massage to release chronic muscle tension and knots.</p>
-                        <div class="mt-3">
-                            <a href="services" class="btn btn-outline-primary text-uppercase me-2">View Services</a>
-                            <a href="appointments/create" class="btn btn-primary text-uppercase">Book Now</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card h-100 border-opacity-25 shadow-sm offer-card">
-                    <div class="card-body text-center d-flex flex-column">
-                        <h5 class="card-title">Swedish Massage</h5>
-                        <p class="card-text text-muted flex-grow-1">A gentle, relaxing full-body massage using long strokes to relieve tension.</p>
-                        <div class="mt-3">
-                            <a href="services" class="btn btn-outline-primary text-uppercase me-2">View Services</a>
-                            <a href="appointments/create" class="btn btn-primary text-uppercase">Book Now</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </section>
@@ -155,100 +126,99 @@
 <style>
     /* --- NEW HERO STYLES --- */
     .hero-wrapper {
-        width: 100%;
         background: linear-gradient(to bottom, #dbeff2 0%, #ffffff 100%); /* Light blue fade like your image */
         padding-bottom: 50px;
+        width: 100%;
     }
 
     .hero-image {
-        width: 100%;
-        height: 520px; /* Adjust height as needed */
         /* Placeholder Image - Replace with your own image */
         background-image: url('https://wallpaperaccess.com/full/2551173.jpg');
-        background-size: cover;
         background-position: center;
+        background-size: cover;
+        height: 520px; /* Adjust height as needed */
+        width: 100%;
     }
 
     .hero-content {
-        padding: 60px 20px 20px 20px;
-        max-width: 900px;
         margin: 0 auto; /* Centers the text block */
+        max-width: 900px;
+        padding: 60px 20px 20px 20px;
     }
 
     .hero-subtitle {
+        color: #555;
         font-family: 'Lato', sans-serif;
         font-size: 0.85rem;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        color: #555;
-        margin-bottom: 15px;
         font-weight: 700;
+        letter-spacing: 2px;
+        margin-bottom: 15px;
+        text-transform: uppercase;
     }
 
     .hero-title {
+        color: #2C4F58; /* Your Spa Teal */
         font-family: 'Playfair Display', serif;
         font-size: 3.5rem;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        color: #2C4F58; /* Your Spa Teal */
-        margin-bottom: 30px;
         font-weight: 400;
+        letter-spacing: 3px;
+        margin-bottom: 30px;
+        text-transform: uppercase;
     }
 
     .hero-text-body {
+        color: #4a4a4a;
         font-family: 'Lato', sans-serif;
         font-size: 1rem;
         line-height: 1.8;
-        color: #4a4a4a;
         margin-bottom: 40px;
     }
 
     .hero-nav-strip {
-        border-top: 1px solid #ccc; /* The line above the links */
         border-bottom: 1px solid #ccc; /* The line below the links (optional) */
-        padding: 15px 0;
+        border-top: 1px solid #ccc; /* The line above the links */
         display: flex;
-        justify-content: center;
         flex-wrap: wrap;
         gap: 30px;
+        justify-content: center;
+        padding: 15px 0;
     }
 
-        .hero-nav-strip a {
-            font-family: 'Playfair Display', serif;
-            color: #777;
-            text-decoration: none;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            transition: color 0.3s ease;
-        }
+    .hero-nav-strip a {
+        color: #777;
+        font-family: 'Playfair Display', serif;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+        text-decoration: none;
+        text-transform: uppercase;
+        transition: color 0.3s ease;
+    }
 
-            .hero-nav-strip a:hover {
-                color: #C5A059; /* Your Spa Gold */
-            }
+    .hero-nav-strip a:hover {
+        color: #C5A059; /* Your Spa Gold */
+    }
 
     /* --- EXISTING STYLES (Unchanged) --- */
+
     .promo-section {
+        align-items: center;
+        background: linear-gradient(135deg, #f0f9fa 0%, #e6f7f8 100%);
+        color: #333;
         display: flex;
         flex-wrap: wrap;
-        background: linear-gradient(135deg, #f0f9fa 0%, #e6f7f8 100%);
         font-family: 'Lato', sans-serif;
-        color: #333;
-        max-width: 1200px;
         margin: 0 auto;
-        align-items: center;
+        max-width: 1200px;
     }
 
-    .promo-image {
-        flex: 1 1 500px;
-    }
+    .promo-image { flex: 1 1 500px; }
 
-        .promo-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-            object-fit: cover;
-        }
+    .promo-image img {
+        display: block;
+        height: auto;
+        object-fit: cover;
+        width: 100%;
+    }
 
     .promo-content {
         flex: 1 1 400px;
@@ -257,8 +227,8 @@
     }
 
     .promo-subtitle {
-        font-family: 'Playfair Display', serif;
         color: #136F7B;
+        font-family: 'Playfair Display', serif;
         font-size: 2rem;
         letter-spacing: 2px;
         margin-bottom: 0;
@@ -266,40 +236,38 @@
     }
 
     .promo-title {
-        font-family: 'Playfair Display', serif;
         color: #0F2540;
+        font-family: 'Playfair Display', serif;
         font-size: 3rem;
-        letter-spacing: 3px;
-        margin-top: 0;
-        margin-bottom: 20px;
-        text-transform: uppercase;
         font-weight: 400;
+        letter-spacing: 3px;
+        margin-bottom: 20px;
+        margin-top: 0;
+        text-transform: uppercase;
     }
 
     .promo-text {
+        color: #4a4a4a;
         font-size: 1.1rem;
         line-height: 1.6;
-        color: #4a4a4a;
         margin-bottom: 30px;
         max-width: 90%;
     }
 
     .btn-signup {
         background-color: #136F7B;
-        color: white;
         border: none;
-        padding: 15px 40px;
+        color: white;
+        cursor: pointer;
         font-size: 0.9rem;
         font-weight: bold;
         letter-spacing: 2px;
-        cursor: pointer;
+        padding: 15px 40px;
         text-transform: uppercase;
         transition: background-color 0.3s ease;
     }
 
-        .btn-signup:hover {
-            background-color: #0e525b;
-        }
+    .btn-signup:hover { background-color: #0e525b; }
 
     @@media (max-width: 768px) {
         .promo-content {
@@ -307,13 +275,9 @@
             text-align: center;
         }
 
-        .promo-text {
-            margin: 0 auto 30px auto;
-        }
+        .promo-text { margin: 0 auto 30px auto; }
 
-        .hero-title {
-            font-size: 2.5rem;
-        }
+        .hero-title { font-size: 2.5rem; }
     }
 </style>
 
@@ -333,8 +297,8 @@
 
 @code {
     private int visibleReviews = 6;
-    private bool IsAuthenticated = false;
-    private bool CanViewAppointments = false;
+    private bool IsAuthenticated;
+    private bool CanViewAppointments;
 
     public class ReviewModel
     {
@@ -343,7 +307,16 @@
         public int Rating { get; set; }
     }
 
-    private List<ReviewModel> Reviews = new List<ReviewModel>();
+    private class Service
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public int Duration { get; set; }
+        public decimal Price { get; set; }
+    }
+
+    private List<Service> services = new();
+    private readonly List<ReviewModel> Reviews = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -351,6 +324,17 @@
         var realReviews = await context.Review
             .Include(r => r.Customer)
             .OrderByDescending(r => r.ReviewId)
+            .ToListAsync();
+
+        // Fetch Services
+        services = await context.Service
+            .Select(s => new Service
+            {
+                Name = s.Name,
+                Description = s.Description,
+                Duration = s.DurationMinutes,
+                Price = s.DurationPrice
+            })
             .ToListAsync();
 
         foreach (var r in ((IEnumerable<Review>)realReviews).Reverse())
@@ -373,7 +357,6 @@
 
             if (IsAuthenticated)
             {
-                // policy "CustomersOrAbove" used in other places means any of these roles
                 CanViewAppointments =
                     user.IsInRole("Customer") ||
                     user.IsInRole("Staff") ||
@@ -389,6 +372,14 @@
         }
     }
 
-    private void ShowMore() { visibleReviews = Reviews.Count; }
-    private void ShowLess() { visibleReviews = 6; }
+    private void ShowMore()
+    {
+        visibleReviews = Reviews.Count;
+    }
+
+    private void ShowLess()
+    {
+        visibleReviews = 6;
+    }
+
 }
