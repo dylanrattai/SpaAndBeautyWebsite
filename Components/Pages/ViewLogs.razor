@@ -1,20 +1,22 @@
 ﻿@page "/view-user-logs"
+@inject IDbContextFactory<SpaAndBeautyWebsiteContext> DbFactory
+@inject NavigationManager NavigationManager
+@attribute [Authorize(Policy = "StaffOrAbove")]
+@rendermode InteractiveServer
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using Microsoft.EntityFrameworkCore
 @using SpaAndBeautyWebsite.Data
 @using SpaAndBeautyWebsite.Models
-@inject IDbContextFactory<SpaAndBeautyWebsiteContext> DbFactory
-@inject NavigationManager NavigationManager
-@attribute [Authorize(Policy = "StaffOrAbove")]
-@rendermode InteractiveServer
 @implements IAsyncDisposable
 
 <h3>Customer Logs</h3>
 
 @if (customer == null)
 {
-    <p><em>Loading...</em></p>
+    <p>
+        <em>Loading...</em>
+    </p>
 }
 else
 {
@@ -27,18 +29,17 @@ else
     <h4>Appointments</h4>
 
     <QuickGrid Class="table table-striped" Items="appointmentsQuery">
-        <PropertyColumn Property="@(a => a.ScheduledDateTime)" Title="Date" Format="g" Sortable="true" />
-        <PropertyColumn Property="@(a => a.ServiceName)" Title="Service" Sortable="true" />
-        <PropertyColumn Property="@(a => a.EmployeeName)" Title="Employee" Sortable="true" />
-        <PropertyColumn Property="@(a => a.Status)" Sortable="true" />
-        <PropertyColumn Property="@(a => a.Notes)" Sortable="true" />
-        <PropertyColumn Property="@(a => a.StaffComments)" Title="Staff Comments" Sortable="true" />
+        <PropertyColumn Property="@(a => a.ScheduledDateTime)" Title="Date" Format="g" Sortable="true"/>
+        <PropertyColumn Property="@(a => a.ServiceName)" Title="Service" Sortable="true"/>
+        <PropertyColumn Property="@(a => a.EmployeeName)" Title="Employee" Sortable="true"/>
+        <PropertyColumn Property="@(a => a.Status)" Sortable="true"/>
+        <PropertyColumn Property="@(a => a.Notes)" Sortable="true"/>
+        <PropertyColumn Property="@(a => a.StaffComments)" Title="Staff Comments" Sortable="true"/>
     </QuickGrid>
 }
 
 @code {
-    [SupplyParameterFromQuery]
-    private int CustomerId { get; set; }
+    [SupplyParameterFromQuery] private int CustomerId { get; set; }
 
     private SpaAndBeautyWebsiteContext? context;
     private Customer? customer;
@@ -59,22 +60,22 @@ else
         }
 
         appointmentsQuery = from a in context.Appointment
-                            join s in context.Service on a.ServiceId equals s.ServiceId
-                            join e in context.Employee on a.EmployeeId equals e.EmployeeId
-                            where a.CustomerId == CustomerId
-                            orderby a.ScheduledDateTime descending
-                            select new AppointmentLogViewModel
-                            {
-                                AppointmentId = a.AppointmentId,
-                                ScheduledDateTime = a.ScheduledDateTime,
-                                Status = a.Status,
-                                // Pull name from Service Table
-                                ServiceName = s.Name,
-                                // Pull names from Employee Table
-                                EmployeeName = e.FirstName + " " + e.LastName,
-                                Notes = a.Notes,
-                                StaffComments = a.StaffComments
-                            };
+            join s in context.Service on a.ServiceId equals s.ServiceId
+            join e in context.Employee on a.EmployeeId equals e.EmployeeId
+            where a.CustomerId == CustomerId
+            orderby a.ScheduledDateTime descending
+            select new AppointmentLogViewModel
+            {
+                AppointmentId = a.AppointmentId,
+                ScheduledDateTime = a.ScheduledDateTime,
+                Status = a.Status,
+                // Pull name from Service Table
+                ServiceName = s.Name,
+                // Pull names from Employee Table
+                EmployeeName = e.FirstName + " " + e.LastName,
+                Notes = a.Notes,
+                StaffComments = a.StaffComments
+            };
     }
 
     public async ValueTask DisposeAsync()
@@ -93,4 +94,5 @@ else
         public string? Notes { get; set; }
         public string? StaffComments { get; set; }
     }
+
 }
